@@ -4,7 +4,7 @@ JS8Call is a desktop program. On the Pi it runs on a virtual display (Xvfb, disp
 
 ## Install
 
-⚠ To be finalised on hardware. JS8Call's site offers packages for the Raspberry Pi; which one installs on current Raspberry Pi OS (32-bit `armhf` or 64-bit `arm64`) is being checked. Building from source on a 1 GB Pi works but takes hours.
+`install.sh` installs Debian's `js8call` package (version 2.2.0 on Raspberry Pi OS based on Debian 12 or 13), on 32-bit and 64-bit systems alike. To install it by hand: `sudo apt install js8call`.
 
 ## Set up over VNC (once)
 

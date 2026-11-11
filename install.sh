@@ -17,7 +17,7 @@ cd "$(dirname "$0")"
 echo "== Packages"
 apt-get update
 apt-get install -y python3 python3-paho-mqtt python3-yaml libhamlib-utils \
-  xvfb x11vnc chrony zram-tools alsa-utils
+  js8call xvfb x11vnc chrony zram-tools alsa-utils
 
 echo "== User '$USER_NAME' (serial port and sound access)"
 if ! id "$USER_NAME" >/dev/null 2>&1; then
@@ -53,7 +53,7 @@ cat <<EOF
 Done. Next:
   1. Set the radio's serial port in $ETC/rigctld.env  (docs/04-rigctld.md)
   2. Set MQTT login and your radio in $ETC/config.yaml  (docs/06-home-assistant.md)
-  3. Install JS8Call and set it up once over VNC      (docs/05-js8call.md)
+  3. Set up JS8Call once over VNC                       (docs/05-js8call.md)
   4. sudo systemctl restart rigctld ham-gateway
      journalctl -u ham-gateway -f
 EOF

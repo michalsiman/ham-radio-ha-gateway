@@ -4,7 +4,7 @@ Bring a ham radio and [JS8Call](http://js8call.com) into Home Assistant: see whe
 
 A Raspberry Pi next to the radio does the work; Home Assistant gets everything over the network through MQTT, as entities that appear on their own.
 
-> **Status: under development.** The gateway and its tests are done; the installation guide is being checked step by step on a Raspberry Pi 4 (1 GB) with an Icom IC-7300. Steps not yet checked on hardware are marked ⚠.
+> **Status: under development.** The gateway and its tests are done; the installation guide, which starts from a new Raspberry Pi and an empty microSD card, is being checked step by step on a Raspberry Pi 4 (1 GB) with an Icom IC-7300. Steps not yet checked on hardware are marked ⚠.
 
 ```
  Radio ──USB──► Raspberry Pi ───────── network ─────────► Home Assistant
@@ -35,7 +35,7 @@ Transmitting from Home Assistant is off by default: a message sent that way goes
 ## Guide
 
 1. [What you need](docs/01-hardware.md)
-2. [Raspberry Pi: system and gateway](docs/02-raspberry-pi.md)
+2. [Raspberry Pi: from a new board to the installed gateway](docs/02-raspberry-pi.md)
 3. [Radio settings (IC-7300)](docs/03-radio-ic7300.md)
 4. [Radio control: rigctld](docs/04-rigctld.md)
 5. [JS8Call](docs/05-js8call.md)
