@@ -27,6 +27,8 @@ class RigState:
     passband_hz: int | None = None
     transmitting: bool | None = None
     s_meter_db: int | None = None
+    # Transmit power setting, 0.0–1.0 of the radio's maximum.
+    rf_power: float | None = None
     power_on: bool | None = None
     extra: dict = field(default_factory=dict)
 
@@ -38,6 +40,7 @@ class RigState:
             "passband_hz": self.passband_hz,
             "transmitting": self.transmitting,
             "s_meter_db": self.s_meter_db,
+            "rf_power": self.rf_power,
             "power_on": self.power_on,
         }
 
@@ -48,6 +51,7 @@ _ANSWER_LINES = {
     "m": 2,
     "t": 1,
     "l STRENGTH": 1,
+    "l RFPOWER": 1,
     "\\get_powerstat": 1,
 }
 
@@ -129,6 +133,12 @@ class RigctldClient:
     async def strength(self) -> int:
         return int(float((await self.get("l STRENGTH"))[0]))
 
+    async def rf_power(self) -> float:
+        return float((await self.get("l RFPOWER"))[0])
+
+    async def set_rf_power(self, fraction: float) -> None:
+        await self.set(f"L RFPOWER {max(0.0, min(1.0, fraction)):.3f}")
+
     async def power_status(self) -> bool:
         return (await self.get("\\get_powerstat"))[0] == "1"
 
@@ -159,7 +169,7 @@ class RigctldClient:
         state.online = True
         if state.power_on is None:
             state.power_on = True
-        for name, reader in (("mode", self.mode), ("ptt", self.ptt), ("strength", self.strength)):
+        for name, reader in (("mode", self.mode), ("ptt", self.ptt), ("strength", self.strength), ("rfpower", self.rf_power)):
             try:
                 value = await reader()
             except RigError:
@@ -168,6 +178,8 @@ class RigctldClient:
                 state.mode, state.passband_hz = value  # type: ignore[misc]
             elif name == "ptt":
                 state.transmitting = value  # type: ignore[assignment]
+            elif name == "rfpower":
+                state.rf_power = value  # type: ignore[assignment]
             else:
                 state.s_meter_db = value  # type: ignore[assignment]
         return state

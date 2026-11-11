@@ -63,10 +63,11 @@ class Bridge:
             allow_transmit=self.config.js8call.allow_transmit,
             power_control=self.config.rig.power_control,
             version=__version__,
+            max_power_w=self.config.rig.max_power_w,
         ):
             self.mqtt.publish(topic, encode(payload) if payload else "", retain=True)
         self.mqtt.publish(self.topics.status, "online", retain=True)
-        for key in ("frequency", "mode", "power"):
+        for key in ("frequency", "mode", "power", "tx_power"):
             self.mqtt.subscribe(self.topics.rig_command(key))
         if self.config.js8call.enabled:
             self.mqtt.subscribe(self.topics.js8_command("send"))
@@ -88,6 +89,9 @@ class Bridge:
                 self._publish(t.rig("transmitting"), state.transmitting)
             if state.s_meter_db is not None:
                 self._publish(t.rig("s_meter"), state.s_meter_db)
+            if state.rf_power is not None:
+                watts = state.rf_power * self.config.rig.max_power_w
+                self._publish(t.rig("tx_power"), f"{watts:.1f}".rstrip("0").rstrip("."))
         else:
             self._publish(t.rig("transmitting"), False)
         self._last_state = state
@@ -150,6 +154,11 @@ class Bridge:
                 if mode not in self.config.rig.modes:
                     raise ValueError(f"unknown mode {mode!r}")
                 await self.rig.set_mode(mode, self.config.rig.passband_hz)
+            elif topic == t.rig_command("tx_power"):
+                watts = float(payload.strip().replace(",", "."))
+                if not 0 <= watts <= self.config.rig.max_power_w:
+                    raise ValueError(f"power {watts} W is outside 0–{self.config.rig.max_power_w} W")
+                await self.rig.set_rf_power(watts / self.config.rig.max_power_w)
             elif topic == t.rig_command("power"):
                 if not self.config.rig.power_control:
                     raise ValueError("power control is off in the configuration")

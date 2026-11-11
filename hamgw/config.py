@@ -29,6 +29,8 @@ class RigConfig:
     modes: list[str] = field(default_factory=lambda: list(DEFAULT_MODES))
     # Passband for mode changes; 0 = the radio's default for the mode.
     passband_hz: int = 0
+    # The radio's maximum transmit power, to show the power setting in watts.
+    max_power_w: float = 100
 
 
 @dataclass

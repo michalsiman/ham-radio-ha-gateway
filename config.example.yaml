@@ -22,6 +22,7 @@ rig:
   power_control: false        # offer an on/off switch (see docs/03-radio-ic7300.md)
   modes: [USB, LSB, CW, CWR, AM, FM, RTTY, PKTUSB, PKTLSB]
   passband_hz: 0              # 0 = the radio's default for the mode
+  max_power_w: 100            # the radio's maximum TX power (IC-7300: 100 W)
 
 js8call:
   enabled: true

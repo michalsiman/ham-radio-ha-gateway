@@ -58,6 +58,12 @@ class BridgeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.rig.mode, "LSB")
         await b.on_command("ham-gateway/ic_7300/rig/mode/set", "NOPE")
         self.assertEqual(self.rig.mode, "LSB")
+        self.assertEqual(self.mqtt.last("ham-gateway/ic_7300/rig/tx_power"), "50")
+        await b.on_command("ham-gateway/ic_7300/rig/tx_power/set", "25")
+        self.assertAlmostEqual(self.rig.rfpower, 0.25)
+        self.assertEqual(self.mqtt.last("ham-gateway/ic_7300/rig/tx_power"), "25")
+        await b.on_command("ham-gateway/ic_7300/rig/tx_power/set", "150")
+        self.assertAlmostEqual(self.rig.rfpower, 0.25)
         await b.on_command("ham-gateway/ic_7300/rig/power/set", "OFF")
         self.assertEqual(self.rig.power, 0)
 

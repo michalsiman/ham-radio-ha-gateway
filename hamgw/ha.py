@@ -52,6 +52,7 @@ def discovery_configs(
     allow_transmit: bool = False,
     power_control: bool = False,
     version: str = "",
+    max_power_w: float = 100,
 ) -> list[tuple[str, dict]]:
     """(config topic, payload) for every entity; an empty payload removes one."""
     device = {
@@ -92,6 +93,15 @@ def discovery_configs(
         entity("binary_sensor", "transmitting", {
             "name": "Transmitting", "icon": "mdi:radio-tower",
             "state_topic": topics.rig("transmitting"), "payload_on": "ON", "payload_off": "OFF",
+        }),
+        entity("sensor", "tx_power", {
+            "name": "TX power", "device_class": "power", "unit_of_measurement": "W",
+            "state_class": "measurement", "icon": "mdi:flash", "state_topic": topics.rig("tx_power"),
+        }),
+        entity("number", "tx_power_set", {
+            "name": "Set TX power", "unit_of_measurement": "W", "mode": "slider", "icon": "mdi:flash",
+            "min": 0, "max": max_power_w, "step": 1 if max_power_w >= 20 else 0.5,
+            "state_topic": topics.rig("tx_power"), "command_topic": topics.rig_command("tx_power"),
         }),
         entity("sensor", "s_meter", {
             "name": "S-meter", "unit_of_measurement": "dB", "state_class": "measurement",

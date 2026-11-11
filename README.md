@@ -23,6 +23,7 @@ Many radios, the IC-7300 among them, carry both radio control (CAT/CI-V) and a s
 | Frequency, Mode | what the radio is set to |
 | Tune, Set mode | change frequency and mode from Home Assistant |
 | Transmitting | PTT |
+| TX power, Set TX power | transmit power setting in watts |
 | S-meter | signal strength, dB relative to S9 |
 | Power *(optional)* | switch the radio on and off, where the radio allows it |
 | JS8Call | JS8Call is running and connected |

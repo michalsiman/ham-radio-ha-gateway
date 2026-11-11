@@ -30,6 +30,7 @@ class FakeRigctld:
         self.passband = 3000
         self.ptt = 0
         self.strength = -54
+        self.rfpower = 0.5
         self.power = 1
         self.powerstat_supported = True
         self.commands: list[str] = []
@@ -60,9 +61,14 @@ class FakeRigctld:
             return [str(self.ptt)]
         if cmd == "l STRENGTH":
             return [str(self.strength)]
+        if cmd == "l RFPOWER":
+            return [f"{self.rfpower:.6f}"]
         parts = cmd.split()
         if parts[0] == "F":
             self.frequency = int(parts[1])
+            return ["RPRT 0"]
+        if parts[:2] == ["L", "RFPOWER"]:
+            self.rfpower = float(parts[2])
             return ["RPRT 0"]
         if parts[0] == "M":
             self.mode = parts[1]
