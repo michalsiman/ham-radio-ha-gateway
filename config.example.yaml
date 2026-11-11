@@ -1,0 +1,34 @@
+# ham-radio-ha-gateway configuration. Copy to /etc/ham-gateway/config.yaml.
+
+# The device in Home Assistant. Entity ids are made from it,
+# e.g. sensor.ic_7300_frequency.
+device_name: IC-7300
+# base_topic: ham-gateway/ic_7300     # default: ham-gateway/<device id>
+# discovery_prefix: homeassistant
+log_level: INFO
+
+mqtt:
+  host: homeassistant.local   # or the IP address of Home Assistant
+  port: 1883
+  username: ham-gateway       # see docs/06-home-assistant.md
+  password: change-me
+
+rig:
+  host: 127.0.0.1             # rigctld on this Raspberry Pi
+  port: 4532
+  model: Icom IC-7300         # shown in Home Assistant only
+  poll_seconds: 2
+  read_power: true            # ask the radio whether it is on
+  power_control: false        # offer an on/off switch (see docs/03-radio-ic7300.md)
+  modes: [USB, LSB, CW, CWR, AM, FM, RTTY, PKTUSB, PKTLSB]
+  passband_hz: 0              # 0 = the radio's default for the mode
+
+js8call:
+  enabled: true
+  host: 127.0.0.1
+  port: 2442
+  callsign: ""                # empty = read it from JS8Call
+  groups: []                  # groups that count as "to me", e.g. ["@OK"]
+  # Let Home Assistant send JS8 messages. They transmit with nobody at
+  # the radio: check your licence conditions before turning this on.
+  allow_transmit: false

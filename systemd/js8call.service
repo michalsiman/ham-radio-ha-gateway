@@ -1,0 +1,14 @@
+[Unit]
+Description=JS8Call on the virtual display :1
+After=xvfb.service rigctld.service sound.target
+Requires=xvfb.service
+
+[Service]
+Environment=DISPLAY=:1
+ExecStart=/usr/bin/js8call
+User=ham
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

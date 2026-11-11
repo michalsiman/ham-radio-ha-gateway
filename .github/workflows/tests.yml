@@ -1,0 +1,25 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install the packages the gateway imports on the Pi
+        run: pip install paho-mqtt pyyaml
+      - name: Import every module
+        run: python -c "import hamgw.mqtt, hamgw.__main__, hamgw.config; hamgw.config.load_config('config.example.yaml')"
+      - name: Tests
+        run: python -m unittest discover -s tests -t . -v
+      - name: Shell script
+        run: shellcheck install.sh

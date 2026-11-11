@@ -1,0 +1,10 @@
+[Unit]
+Description=Virtual display :1 for JS8Call
+
+[Service]
+ExecStart=/usr/bin/Xvfb :1 -screen 0 1280x800x16 -nolisten tcp
+User=ham
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Hamlib rigctld (radio control on the network)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+EnvironmentFile=/etc/ham-gateway/rigctld.env
+ExecStart=/bin/sh -c 'exec /usr/bin/rigctld -m "$RIG_MODEL" -r "$RIG_DEVICE" -s "$RIG_SPEED" -T "$RIGCTLD_LISTEN" -t 4532'
+User=ham
+Group=dialout
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

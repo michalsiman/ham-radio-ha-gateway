@@ -1,0 +1,14 @@
+[Unit]
+Description=ham-radio-ha-gateway (radio and JS8Call to Home Assistant over MQTT)
+After=network-online.target rigctld.service
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/ham-radio-ha-gateway
+ExecStart=/usr/bin/python3 -m hamgw --config /etc/ham-gateway/config.yaml
+User=ham
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

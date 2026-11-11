@@ -1,0 +1,38 @@
+# Example automations for Home Assistant. Entity ids assume device_name: IC-7300.
+
+- alias: JS8 message for me → phone
+  triggers:
+    - trigger: state
+      entity_id: event.ic_7300_js8call
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'message_to_me' }}"
+  actions:
+    - action: notify.mobile_app_my_phone
+      data:
+        title: "JS8 from {{ trigger.to_state.attributes.from }}"
+        message: "{{ trigger.to_state.attributes.text }}"
+
+- alias: Log every station heard on JS8
+  triggers:
+    - trigger: state
+      entity_id: event.ic_7300_js8call
+  conditions:
+    - condition: template
+      value_template: "{{ trigger.to_state.attributes.event_type == 'heard' }}"
+  actions:
+    - action: logbook.log
+      data:
+        name: JS8
+        message: >
+          heard {{ trigger.to_state.attributes.call }}
+          {{ trigger.to_state.attributes.grid }} SNR {{ trigger.to_state.attributes.snr }}
+
+- alias: Radio transmitting → light on
+  triggers:
+    - trigger: state
+      entity_id: binary_sensor.ic_7300_transmitting
+  actions:
+    - action: "light.turn_{{ 'on' if trigger.to_state.state == 'on' else 'off' }}"
+      target:
+        entity_id: light.on_air
