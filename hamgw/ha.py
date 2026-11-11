@@ -80,10 +80,15 @@ def discovery_configs(
             "suggested_display_precision": 4, "state_class": "measurement",
             "state_topic": topics.rig("frequency"), "icon": "mdi:sine-wave",
         }),
+        # In kHz: Home Assistant allows no number step below 0.001, and 10 Hz
+        # steps are fine enough for tuning. Sent to the gateway in MHz.
         entity("number", "frequency_set", {
-            "name": "Tune", "unit_of_measurement": "MHz", "mode": "box",
-            "min": 0.1, "max": 470, "step": 0.0001, "icon": "mdi:knob",
-            "state_topic": topics.rig("frequency"), "command_topic": topics.rig_command("frequency"),
+            "name": "Tune", "unit_of_measurement": "kHz", "mode": "box",
+            "min": 100, "max": 470000, "step": 0.01, "icon": "mdi:knob",
+            "state_topic": topics.rig("frequency"),
+            "value_template": "{{ (value | float(0) * 1000) | round(2) }}",
+            "command_topic": topics.rig_command("frequency"),
+            "command_template": "{{ '%.6f' | format(value / 1000) }}",
         }),
         entity("sensor", "mode", {"name": "Mode", "state_topic": topics.rig("mode"), "icon": "mdi:waveform"}),
         entity("select", "mode_set", {

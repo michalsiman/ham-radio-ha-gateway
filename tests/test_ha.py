@@ -15,6 +15,8 @@ class DiscoveryTests(unittest.TestCase):
         self.assertEqual(freq["availability_topic"], "ham-gateway/ic_7300/status")
         self.assertEqual(freq["device"]["identifiers"], ["hamgw_ic_7300"])
         self.assertIn("homeassistant/event/hamgw_ic_7300_js8_event/config", c)
+        tune = c["homeassistant/number/hamgw_ic_7300_frequency_set/config"]
+        self.assertGreaterEqual(tune["step"], 0.001, "Home Assistant rejects smaller steps")
 
     def test_transmit_and_power_are_opt_in(self):
         c = self.configs()
